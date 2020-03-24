@@ -1,0 +1,1 @@
+node C:/Users/09064172/Desktop/daka/app.js

@@ -1,0 +1,25 @@
+.DS_Store
+node_modules/
+/dist/
+coverage/
+reports-test/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+
+# Editor directories and files
+.idea
+.vscode
+*.txt
+*.ntvs*
+*.njsproj
+*.sln
+config/multipage.project.js
+/src/hucais-mall/mdc/activity/components/cityChoose.vue
+/src/hucais-mall/mdc/activity/assembleList.vue
+/src/hucais-mall/mdc/activity/assembleRes.vue
+/src/hucais-mall/assets/img/common/share1.png
+/src/hucais-mall/assets/img/common/share2.png
+/src/hucais-mall/assets/img/common/share3.png
+/src/hucais-mall/assets/img/common/tp_qrcode.png
