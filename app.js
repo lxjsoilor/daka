@@ -1,4 +1,5 @@
-const request=require('request');
+const request = require('request');
+const moment = require('moment')
 const fs = require('fs');
 let startMsg = `开始打卡-----------${new Date().toLocaleString()}\r\n`
 const loginUrl = `http://moa.hucais.com:89/client.do?method=login&loginid=09064172&password=123456&isneedmoulds=1&client=1&clientver=6.6.0.1&udid=0a84fac33fb3065e&token=&clientos=HUAWEIVOG-AL00&clientosver=10&clienttype=android&language=zh&country=CN&authcode=&dynapass=&tokenpass=&relogin=0&clientuserid=&tokenFromThird=&signatureValue=&signAlg=&randomNumber=&cert=`
@@ -16,8 +17,8 @@ function isDuringDate(begin, end, current='') {
         endDate = +new Date(end);
     return (currentDate >= beginDate && currentDate <= endDate);
 }
-const currentDateString = new Date().toLocaleDateString();
-let tempArr = [
+const currentDateString = moment().format('YYYY-MM-DD');
+let timeRangeArr = [
     [`${currentDateString} 07:00:00`, `${currentDateString} 08:00:00`],
     [`${currentDateString} 12:00:00`, `${currentDateString} 13:30:00`],
     [`${currentDateString} 17:30:00`, `${currentDateString} 23:00:00`]
@@ -46,7 +47,7 @@ request({
         str = arr.join(';');
 
         request({
-            url: `http://moa.hucais.com:89/client.do?method=postjson&operation=getList&sessionkey=${body.sessionkey}&scope=10&pageindex=1&pagesize=&beginQueryDate=2020-03-24+00%3A00%3A00&endQueryDate=2020-03-24+23%3A59%3A59&operaterId=&signType=`,
+            url: `http://moa.hucais.com:89/client.do?method=postjson&operation=getList&sessionkey=${body.sessionkey}&scope=10&pageindex=1&pagesize=&beginQueryDate=${currentDateString}+00%3A00%3A00&endQueryDate=${currentDateString}+23%3A59%3A59&operaterId=&signType=`,
             method: "POST",
             headers: {
                 "content-type": "application/x-www-form-urlencoded",
@@ -59,7 +60,7 @@ request({
             })
             let currentIndex = '';
             printList.forEach(item => {
-                tempArr.forEach((date, i) => {
+                timeRangeArr.forEach((date, i) => {
                     if(isDuringDate(date[0], date[1], item)) {
                         flagArr[i] += 1
                     }
@@ -68,6 +69,7 @@ request({
                     }
                 })
             });
+            console.log(flagArr)
             if((flagArr[currentIndex] <= 0 && currentIndex != 1) || (flagArr[currentIndex] <= 1 && currentIndex === 1)) {
                 request({
                 	url: `http://moa.hucais.com:89/client.do?method=postjson&module=17&scope=10&operation=create&sessionkey=${body.sessionkey}&latitudeLongitude=22.849974999999986,113.72192599999997&address=${encodeURIComponent('广东省东莞市沙河路49号靠近虎彩印艺工厂区')}&remark=${encodeURIComponent('无')}&attachmentIds=`,
